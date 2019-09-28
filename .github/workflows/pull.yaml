@@ -1,0 +1,30 @@
+name: Publish pull request
+
+on: pull_request
+
+jobs:
+  build:
+
+    name: Build and publish
+    runs-on: ubuntu-latest
+            
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Setup .NET Core 3.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+
+    - name: Build (core 3.0)
+      run: dotnet build --configuration Release
+
+    - name: Publish
+      run: dotnet publish --configuration Release --no-build -o ./publish/
+      
+    - uses: actions/upload-artifact@master
+      with:
+        name: Bookshelf
+        path: ./publish/
