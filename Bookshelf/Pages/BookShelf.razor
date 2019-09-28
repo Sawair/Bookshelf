@@ -1,6 +1,8 @@
 ﻿@page "/books"
 @using Bookshelf.Service
 @using Bookshelf.ViewModel
+@using Bookshelf.Components
+
 @inject BookService BookService
 
 <div class="row p-3">
@@ -20,10 +22,10 @@
             </tr>
         </thead>
 
-        @if (books != null)
+        @if (_books != null)
         {
             <tbody>
-                @foreach (var book in books)
+                @foreach (var book in _books)
                 {
                     <tr>
                         <td>@book.Title</td>
@@ -37,18 +39,31 @@
         }
     </table>
 </div>
+
+<AddBookComponent Display="@_showAddBook" OnSave="@SaveBook" Book="@_book" />
+
 @code {
 
-    BookViewModel[] books;
+    private bool _showAddBook;
+    private BookViewModel _book;
+
+    private BookViewModel[] _books;
 
     protected override async Task OnInitializedAsync()
     {
-        books = await BookService.GetBookViewModelsAsync();
+        _showAddBook = false;
+        await LoadBooks();
+    }
+
+    private async Task LoadBooks()
+    {
+        _books = await BookService.GetBookViewModelsAsync();
     }
 
     private void AddBook()
     {
-        //TODO: Add adding book button logic
+        _book = new BookViewModel();
+        _showAddBook = true;
     }
 
     private string GetTags(BookViewModel book)
@@ -59,5 +74,11 @@
             tags += $"{tag}, ";
         }
         return tags.TrimEnd(' ').TrimEnd(',');
+    }
+
+    public async Task SaveBook(BookViewModel book)
+    {
+        await BookService.AddBookViewModel(book);
+        await LoadBooks();
     }
 }

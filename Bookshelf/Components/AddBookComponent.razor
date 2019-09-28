@@ -1,0 +1,76 @@
+﻿@using Bookshelf.ViewModel
+@using Microsoft.AspNetCore.Components
+@if (Display)
+{
+    <div class="modal" tabindex="-1" style="display:block" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add book</h3>
+                    <button type="button" class="close" @onclick="Exit">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="Title" class="col-form-label">Title</label>
+                            <input for="Title" class="form-control" @bind="@_book.Title" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Tags" class="col-form-label">Tags</label>
+                            <input for="Tags" class="form-control" @bind="@tags" />
+                            <p>Comma separate list of tags</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="IsEbook" class="col-form-label pr-3">Is e-book</label>
+                            <input for="IsEbook" type="checkbox" class="form-check" @bind="@_book.IsEbook" />
+                        </div>
+                        <div class="form-group row">
+                            <label for="Available" class="col-form-label pr-3">Is available</label>
+                            <input for="Available" type="checkbox" class="form-check align-self-center" @bind="@_book.Available" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-block btn-success" @onclick="@(async () => await Save())" data-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool Display { get; set; }
+
+    [Parameter]
+    public BookViewModel Book
+    {
+        get => _book;
+        set
+        {
+            _book = value;
+            tags = value?.Id == 0 ? string.Empty : string.Join(", ", tags);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<BookViewModel> OnSave { get; set; }
+
+    private string tags = string.Empty;
+    private BookViewModel _book;
+
+    private void Exit()
+    {
+        tags = "";
+        Display = false;
+    }
+
+    private async Task Save()
+    {
+        _book.Tags = tags.Split(',').ToList();
+        await OnSave.InvokeAsync(_book);
+        Exit();
+    }
+}
