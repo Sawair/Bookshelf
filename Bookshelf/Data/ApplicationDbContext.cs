@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Bookshelf.Data.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,5 +13,8 @@ namespace Bookshelf.Data
             : base(options)
         {
         }
+
+        public DbSet<Book> Book { get; set; }
+        public DbSet<Tag> Tag { get; set; }
     }
 }
