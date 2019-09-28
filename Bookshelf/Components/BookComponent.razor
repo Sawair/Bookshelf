@@ -51,7 +51,14 @@
         set
         {
             _book = value;
-            tags = value?.Id == 0 ? string.Empty : string.Join(", ", tags);
+            if (value?.Id == 0 || value?.Tags == null)
+            {
+                tags = string.Empty;
+            }
+            else
+            {
+                tags = string.Join(", ", value?.Tags);
+            }
         }
     }
 

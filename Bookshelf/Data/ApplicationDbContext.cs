@@ -16,5 +16,6 @@ namespace Bookshelf.Data
 
         public DbSet<Book> Book { get; set; }
         public DbSet<Tag> Tag { get; set; }
+        public DbSet<BookTag> BookTag { get; set; }
     }
 }
