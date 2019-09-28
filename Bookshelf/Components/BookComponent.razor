@@ -1,5 +1,9 @@
-﻿@using Bookshelf.ViewModel
+﻿@using Bookshelf.Service
+@using Bookshelf.ViewModel
 @using Microsoft.AspNetCore.Components
+
+@inject UserService UserService
+
 @if (Display)
 {
     <div class="modal" tabindex="-1" style="display:block" role="dialog">
@@ -30,10 +34,20 @@
                             <label for="Available" class="col-form-label pr-3">Is available</label>
                             <input for="Available" type="checkbox" class="form-check align-self-center" @bind="@_book.Available" />
                         </div>
+                        <div>
+                            <label for="Borrower" class="control-label">Borrower</label>
+                            <select for="Borrower" class="form-control" @bind="@_book.Borrower">
+                                <option value="">-- Select Borrower --</option>
+                                @foreach (var name in UserService.GetUsersNames())
+                                {
+                                    <option value="@name">@name</option>
+                                }
+                            </select>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-block btn-success" @onclick="@(async () => await Save())" data-dismiss="modal">Save</button>
+                    <button class="btn btn-block btn-success" type="submit" @onclick="@(async () => await Save())" data-dismiss="modal">Save</button>
                 </div>
             </div>
         </div>

@@ -2,8 +2,10 @@
 @using Bookshelf.Service
 @using Bookshelf.ViewModel
 @using Bookshelf.Components
+@inherits SecurityPageBase
 
 @inject BookService BookService
+@inject UserService UserService
 
 <div class="row p-3">
     <h3 class="col-2">BookShelf</h3>
@@ -15,6 +17,7 @@
         <thead>
             <tr>
                 <th>Edit</th>
+                <th>Borrow</th>
                 <th>Title</th>
                 <th>Tags</th>
                 <th>Is e-book</th>
@@ -30,6 +33,18 @@
                 {
                     <tr>
                         <td><button class="btn-primary" @onclick="@(() => EditBook(book))">Edit</button></td>
+                        @if (book.Borrower == null)
+                        {
+                            <td><button class="btn-primary" @onclick="@(async () => await BorrowBook(book))">Borrow</button></td>
+                        }
+                        else if (book.Borrower == _currentUserName)
+                        {
+                            <td><button class="btn-primary" @onclick="@(async () => await ReturnBook(book))">Return</button></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
                         <td>@book.Title</td>
                         <td>@GetTags(book)</td>
                         <td>@book.IsEbook</td>
@@ -48,12 +63,13 @@
 
     private bool _showAddBook;
     private BookViewModel _book;
-
+    private string _currentUserName;
     private BookViewModel[] _books;
 
     protected override async Task OnInitializedAsync()
     {
         _showAddBook = false;
+        _currentUserName = UserService.GetCurrentUser().UserName;
         await LoadBooks();
     }
 
@@ -67,11 +83,23 @@
         _book = new BookViewModel();
         _showAddBook = true;
     }
-    
+
     private void EditBook(BookViewModel book)
     {
         _book = book;
         _showAddBook = true;
+    }
+
+    private async Task BorrowBook(BookViewModel book)
+    {
+        book.Borrower = _currentUserName;
+        await SaveBook(book);
+    }
+
+    private async Task ReturnBook(BookViewModel book)
+    {
+        book.Borrower = string.Empty;
+        await SaveBook(book);
     }
 
     private string GetTags(BookViewModel book)
@@ -88,5 +116,6 @@
     {
         await BookService.SaveBookViewModel(book);
         await LoadBooks();
+        _showAddBook = false;
     }
 }
