@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Bookshelf.Areas.Identity;
 using Bookshelf.Data;
+using Bookshelf.Service;
 
 namespace Bookshelf
 {
@@ -39,6 +40,7 @@ namespace Bookshelf
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddScoped<BookService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

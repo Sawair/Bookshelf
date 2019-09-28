@@ -1,0 +1,63 @@
+﻿@page "/books"
+@using Bookshelf.Service
+@using Bookshelf.ViewModel
+@inject BookService BookService
+
+<div class="row p-3">
+    <h3 class="col-2">BookShelf</h3>
+    <button class="col-1 btn btn-primary" @onclick="AddBook">Add book</button>
+</div>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Tags</th>
+                <th>Is e-book</th>
+                <th>Is Available</th>
+                <th>Borrowed by</th>
+            </tr>
+        </thead>
+
+        @if (books != null)
+        {
+            <tbody>
+                @foreach (var book in books)
+                {
+                    <tr>
+                        <td>@book.Title</td>
+                        <td>@GetTags(book)</td>
+                        <td>@book.IsEbook</td>
+                        <td>@book.Available</td>
+                        <td>@book.Borrower</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>
+@code {
+
+    BookViewModel[] books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await BookService.GetBookViewModelsAsync();
+    }
+
+    private void AddBook()
+    {
+        //TODO: Add adding book button logic
+    }
+
+    private string GetTags(BookViewModel book)
+    {
+        var tags = "";
+        foreach (var tag in book.Tags)
+        {
+            tags += $"{tag}, ";
+        }
+        return tags.TrimEnd(' ').TrimEnd(',');
+    }
+}
