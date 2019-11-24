@@ -10,7 +10,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Add book</h3>
+                    <h3 class="modal-title">@Title</h3>
                     <button type="button" class="close" @onclick="Exit">
                         <span aria-hidden="true">X</span>
                     </button>
@@ -27,11 +27,11 @@
                             <p>Comma separate list of tags</p>
                         </div>
                         <div class="form-group row">
-                            <label for="IsEbook" class="col-form-label pr-3">Is e-book</label>
-                            <input for="IsEbook" type="checkbox" class="form-check" @bind="@_book.IsEbook" />
+                            <label for="IsEbook" class="col-form-label pr-3 pl-3">Is e-book</label>
+                            <input for="IsEbook" type="checkbox" class="form-check align-self-center" @bind="@_book.IsEbook" />
                         </div>
                         <div class="form-group row">
-                            <label for="Available" class="col-form-label pr-3">Is available</label>
+                            <label for="Available" class="col-form-label pr-3 pl-3">Is available</label>
                             <input for="Available" type="checkbox" class="form-check align-self-center" @bind="@_book.Available" />
                         </div>
                         <div>
@@ -78,6 +78,9 @@
 
     [Parameter]
     public EventCallback<BookViewModel> OnSave { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
 
     private string tags = string.Empty;
     private BookViewModel _book;

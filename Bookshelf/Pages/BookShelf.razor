@@ -57,7 +57,7 @@
     </table>
 </div>
 
-<BookComponent Display="@_showAddBook" OnSave="@SaveBook" Book="@_book" />
+<BookComponent Display="@_showAddBook" OnSave="@SaveBook" Book="@_book" Title="@_title" />
 
 @code {
 
@@ -65,6 +65,7 @@
     private BookViewModel _book;
     private string _currentUserName;
     private BookViewModel[] _books;
+    private string _title;
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,12 +81,14 @@
 
     private void AddBook()
     {
+        _title = "Add book";
         _book = new BookViewModel();
         _showAddBook = true;
     }
 
     private void EditBook(BookViewModel book)
     {
+        _title = "Edit book";
         _book = book;
         _showAddBook = true;
     }
